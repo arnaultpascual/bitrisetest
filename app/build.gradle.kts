@@ -36,6 +36,33 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    flavorDimensions.add("version")
+
+    productFlavors {
+        create("client1") {
+            dimension = "version"
+
+            resValue("string", "app_name", "Client 1")
+        }
+
+        create("client2") {
+            dimension = "version"
+
+            resValue("string", "app_name", "Client 2")
+        }
+    }
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val flavorName = variant.flavorName
+            val buildType = variant.buildType.name
+            val versionName = variant.versionName
+            val apkName = "${flavorName}-${buildType}-${versionName}.apk"
+            output.outputFileName = apkName
+        }
+    }
 }
 
 dependencies {
